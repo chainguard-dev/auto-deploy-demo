@@ -1,0 +1,44 @@
+name: scan-original
+
+on:
+  workflow_dispatch: # Allows manual triggering
+
+env:
+  REDIS_ORIG_IMAGE: "cgr.dev/cgr-demo.com/redis-server-bitnami:7.0.13-r3-202310161618"
+  
+jobs:
+  check-for-fixes:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Go environment
+        uses: actions/setup-go@v5.1.0
+      
+      - name: Install Crane
+        run: go install github.com/google/go-containerregistry/cmd/crane@latest
+
+      - name: Install Grype
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+        
+      - name: Scan Image with Grype
+        if: env.FIX_CVE == 'true'
+        run: |
+          grype $REDIS_ORIG_IMAGE -o sarif > grype-results.sarif
+          cat grype-results.sarif
+          
+      - name: Upload SARIF results
+        if: env.FIX_CVE == 'true'
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: grype-results.sarif
