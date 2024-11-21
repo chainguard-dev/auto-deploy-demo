@@ -16,7 +16,7 @@
  
 ## Usage
 
-* Run the scan workflow will populate the scan data for the very old redis-server-bitnami image: ![image](https://github.com/user-attachments/assets/60f5beea-8636-44d7-b4c1-0e366a596296)
+* Run the scan workflow will populate the scan data for the very old redis-server-bitnami image: ![image](https://github.com/user-attachments/assets/ebdaca95-efbd-4fe2-a7f1-3b61d782466a)
 * Run the updates workflow to generate a PR with the fixes and scan results: ![image](https://github.com/user-attachments/assets/62dee720-e592-488d-836b-2364dc8e8729)
 * Merge
 * Profit
