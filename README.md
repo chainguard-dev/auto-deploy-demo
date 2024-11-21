@@ -13,3 +13,10 @@
   * Authenticate to the Chainguard Registry using an [assumed identity](https://edu.chainguard.dev/chainguard/administration/iam-organizations/assumable-ids/) (using the ambient creds of each workflow invocation)
   * Authenticate to GitHub (using [octo-sts](https://www.chainguard.dev/unchained/the-end-of-github-pats-you-cant-leak-what-you-dont-have) in place of a long-lived PAT) 
   * Signs commits using [Sigstore/gitsign](https://docs.sigstore.dev/cosign/signing/gitsign/)
+ 
+## Usage
+
+* Run the scan workflow will populate the scan data for the very old redis-server-bitnami image: ![image](https://github.com/user-attachments/assets/60f5beea-8636-44d7-b4c1-0e366a596296)
+* Run the updates workflow to generate a PR with the fixes and scan results
+* Merge
+* Profit
