@@ -1,8 +1,10 @@
 name: Deploy New Release
 
 on:
-  pull_request:
-    branches: [ "main" ]
+  push:
+    branches: [main]
+    paths:
+      - 'helm/redis/values.yaml'
   workflow_dispatch:
 
 env:
