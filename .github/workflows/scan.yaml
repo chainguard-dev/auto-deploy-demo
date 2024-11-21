@@ -7,7 +7,7 @@ env:
   REDIS_ORIG_IMAGE: "cgr.dev/cgr-demo.com/redis-server-bitnami:7.0.13-r3-202310161618"
   
 jobs:
-  check-for-fixes:
+  scan-existing-image:
     runs-on: ubuntu-latest
     permissions:
       actions: read
