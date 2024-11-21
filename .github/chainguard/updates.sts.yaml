@@ -5,7 +5,6 @@ issuer: https://token.actions.githubusercontent.com
 subject_pattern: repo:chainguard-dev/auto-deploy-demo:.*
 claim_pattern:
   job_workflow_ref: chainguard-dev/auto-deploy-demo/.github/workflows/updates.yaml@.*
-  job_workflow_ref: chainguard-dev/auto-deploy-demo/.github/workflows/scan.yaml@.*
 
 permissions:
   contents: write
