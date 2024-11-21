@@ -147,6 +147,30 @@ jobs:
           fi
       
       - uses: chainguard-dev/actions/setup-gitsign@57cb0b7560d9b9b081c15ac5ef689f73f4dda03e # main branch as of 2024-08-02
+      
+      - name: Delete existing branch and PR
+        if: env.FIX_CVE == 'true'
+        env:
+          GH_TOKEN: ${{ steps.octo-sts.outputs.token }}
+        run: |          
+          # Check for an existing PR from the branch
+          PR_NUMBER=$(gh pr list --head "apply-cve-fixes" --json number --jq '.[0].number')
+          if [ -n "$PR_NUMBER" ]; then
+            echo "Closing PR #$PR_NUMBER"
+            gh pr close "$PR_NUMBER" --delete-branch
+          else
+            echo "No PR found for branch 'apply-cve-fixes'"
+          fi
+          
+          # Delete the branch if it exists
+          BRANCH_EXISTS=$(gh repo view --json refs --jq '.refs.nodes[].name' | grep "^apply-cve-fixes$" || true)
+          if [ -n "$BRANCH_EXISTS" ]; then
+            echo "Deleting branch 'apply-cve-fixes'"
+            gh api -X DELETE "/repos/${{ github.repository }}/git/refs/heads/apply-cve-fixes"
+          else
+            echo "Branch 'apply-cve-fixes' does not exist."
+          fi
+    
       - name: Create Pull Request
         if: env.FIX_CVE == 'true'
         uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
@@ -181,4 +205,3 @@ jobs:
           committer: 'github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>'
           author: '${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>'
           delete-branch: true
-          overwrite: true
