@@ -26,7 +26,7 @@ jobs:
     
     - uses: chainguard-dev/setup-chainctl@v0.2.4
       with:
-        identity: "4cf15780a13a9b6576d8b357e6524554c8c12a18/360614f2fd18f22d"
+        identity: "4cf15780a13a9b6576d8b357e6524554c8c12a18/a662f56b58103354"
     
     - name: 'Auth to Registry'
       run: |
