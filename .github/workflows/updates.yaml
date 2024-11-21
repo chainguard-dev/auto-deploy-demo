@@ -8,7 +8,6 @@ on:
     paths:
       - '.github/workflows/updates.yaml'
       - '.github/chainguard/updates.sts.yaml'
-      - 'helm/redis/values.yaml'
   workflow_dispatch: # Allows manual triggering
 
 env:
