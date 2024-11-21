@@ -118,8 +118,8 @@ jobs:
         if: env.FIX_CVE == 'true'
         run: |
           grype $NEW_IMAGE -o sarif > grype-results.sarif
-          cat grype-results.sarif
-          SARIF_SUMMARY=$(cat grype-results.sarif | jq '.runs[0].tool.driver.rules | map({id: .id, severity: .properties.severity})')
+          grype $NEW_IMAGE 2>&1 | tee summary.out
+          SARIF_SUMMARY=$(cat summary.out)
           echo "SARIF_SUMMARY=${SARIF_SUMMARY}" >> $GITHUB_ENV
 
       - name: Upload SARIF results
