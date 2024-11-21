@@ -81,6 +81,7 @@ jobs:
       - name: Cosign Verify 
         if: env.UNIQUE_TAGS_CHANGED == 'true'
         id: cosign-verify
+        continue-on-error: false
         run: |
           OLD_IMAGE="${{ env.REDIS_IMAGE }}:${{ env.CURRENT_UNIQUE_TAG }}"
           NEW_IMAGE="${{ env.REDIS_IMAGE }}:${{ env.LATEST_UNIQUE_TAG }}"
@@ -91,15 +92,14 @@ jobs:
           $NEW_IMAGE | jq
           
           echo "OLD_IMAGE=$OLD_IMAGE" >> $GITHUB_ENV
-          echo "NEW_IMAGE=$NEW_IMAGE" >> $GITHUB_ENV
-        continue-on-error: false
+          echo "NEW_IMAGE=$NEW_IMAGE" >> $GITHUB_ENV       
         
       - name: Run chainctl images diff
         if: env.UNIQUE_TAGS_CHANGED == 'true'
         id: diff_vulnerabilities
         run: |
 
-          CVE_LIST_JSON=$(chainctl images diff "${{ OLD_IMAGE }}" "${{ NEW_IMAGE }}" 2>/dev/null | jq -c '[.vulnerabilities.removed[] | select(.severity == "Critical" or .severity == "High") | .id]')
+          CVE_LIST_JSON=$(chainctl images diff "${{ env.OLD_IMAGE }}" "${{ env.NEW_IMAGE }}" 2>/dev/null | jq -c '[.vulnerabilities.removed[] | select(.severity == "Critical" or .severity == "High") | .id]')
           echo "CVE_LIST=$CVE_LIST_JSON" >> $GITHUB_ENV
 
           if [ -n "$CVE_LIST_JSON" ]; then
