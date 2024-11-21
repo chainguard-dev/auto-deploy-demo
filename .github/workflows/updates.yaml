@@ -170,12 +170,8 @@ jobs:
           commit-message: 'Update images digests'
           title: 'Apply CVE Fix'
           body: |
-            This PR remdiates CVEs: ${{ env.CVE_LIST }}
-            
-            The Helm Redis Image Tag will be updated to: ${{ env.LATEST_UNIQUE_TAG }}
-      
-             <details>
-            <summary>SARIF Summary</summary>
+            <details>
+            <summary>Grype Scan Summary after updating to ${{ env.LATEST_UNIQUE_TAG }}</summary>
 
             ```json
             ${{ env.SARIF_SUMMARY }}
