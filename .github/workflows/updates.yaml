@@ -111,24 +111,23 @@ jobs:
           fi
     
       - name: Scan New Image with Grype
+        if: env.FIX_CVE == 'true'
         run: |
           grype $NEW_IMAGE -o sarif > grype-results.sarif
 
       - name: Upload SARIF results
-        uses: github/codeql-action/upload-sarif@v2
+        if: env.FIX_CVE == 'true'
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: grype-results.sarif
       
-      - env:
-          GITHUB_TOKEN: ${{ steps.octo-sts.outputs.token }}
-        run: |
-          gh repo list
-          
       - name: Update Helm Values
+        if: env.FIX_CVE == 'true'
         shell: bash
         run: yq -i ".image.tag = \"${{ env.LATEST_UNIQUE_TAG }}\"" helm/redis/values.yaml
       
       - name: Run git diff
+        if: env.FIX_CVE == 'true'
         id: create_pr_update
         shell: bash
         run: |
@@ -143,6 +142,7 @@ jobs:
       
       - uses: chainguard-dev/actions/setup-gitsign@57cb0b7560d9b9b081c15ac5ef689f73f4dda03e # main branch as of 2024-08-02
       - name: Create Pull Request
+        if: env.FIX_CVE == 'true'
         uses: peter-evans/create-pull-request@5e914681df9dc83aa4e4905692ca88beb2f9e91f # v7.0.5
         id: pull_request
         with:
