@@ -78,14 +78,28 @@ jobs:
             echo "UNIQUE_TAGS_CHANGED=false" >> $GITHUB_ENV
           fi
 
+      - name: Cosign Verify 
+        if: env.UNIQUE_TAGS_CHANGED == 'true'
+        id: cosign-verify
+        run: |
+          OLD_IMAGE="${{ env.REDIS_IMAGE }}:${{ env.CURRENT_UNIQUE_TAG }}"
+          NEW_IMAGE="${{ env.REDIS_IMAGE }}:${{ env.LATEST_UNIQUE_TAG }}"
+          
+          cosign verify \
+            --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
+            --certificate-identity=https://github.com/chainguard-images/images-private/.github/workflows/release.yaml@refs/heads/main \
+          $NEW_IMAGE | jq
+          
+          echo "OLD_IMAGE=$OLD_IMAGE" >> $GITHUB_ENV
+          echo "NEW_IMAGE=$NEW_IMAGE" >> $GITHUB_ENV
+        continue-on-error: false
+        
       - name: Run chainctl images diff
         if: env.UNIQUE_TAGS_CHANGED == 'true'
         id: diff_vulnerabilities
         run: |
-          OLD_IMAGE="${{ env.REDIS_IMAGE }}:${{ env.CURRENT_UNIQUE_TAG }}"
-          NEW_IMAGE="${{ env.REDIS_IMAGE }}:${{ env.LATEST_UNIQUE_TAG }}"
 
-          CVE_LIST_JSON=$(chainctl images diff $OLD_IMAGE $NEW_IMAGE 2>/dev/null | jq -c '[.vulnerabilities.removed[] | select(.severity == "Critical" or .severity == "High") | .id]')
+          CVE_LIST_JSON=$(chainctl images diff "${{ OLD_IMAGE }}" "${{ NEW_IMAGE }}" 2>/dev/null | jq -c '[.vulnerabilities.removed[] | select(.severity == "Critical" or .severity == "High") | .id]')
           echo "CVE_LIST=$CVE_LIST_JSON" >> $GITHUB_ENV
 
           if [ -n "$CVE_LIST_JSON" ]; then
@@ -96,6 +110,15 @@ jobs:
             echo "FIX_CVE=false" >> $GITHUB_ENV
           fi
     
+      - name: Scan New Image with Grype
+        run: |
+          grype $NEW_IMAGE -o sarif > grype-results.sarif
+
+      - name: Upload SARIF results
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: grype-results.sarif
+      
       - env:
           GITHUB_TOKEN: ${{ steps.octo-sts.outputs.token }}
         run: |
