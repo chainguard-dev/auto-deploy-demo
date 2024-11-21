@@ -1,0 +1,12 @@
+architecture: standalone
+global:
+  redis:
+    password: "redis"
+replica:
+  replicaCount: 1
+master:
+  kind: Deployment
+image:
+  registry: cgr.dev
+  repository: cgr-demo.com/redis-server-bitnami
+  tag: 7.0.13-r3-202310161618
