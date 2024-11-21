@@ -127,7 +127,9 @@ jobs:
           commit-message: 'Update images digests'
           title: 'Apply CVE Fix'
           body: |
-            "Update Helm Redis Image Tag to ${{ env.LATEST_UNIQUE_TAG }}"
+            "This PR remdiates CVEs: \"${{ env.CVE_LIST }}\""
+
+            "The Helm Redis Image Tag will be updated to: \"${{ env.LATEST_UNIQUE_TAG }}\""
       
             ## Changes
             <details>
