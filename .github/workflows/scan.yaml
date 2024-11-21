@@ -24,9 +24,6 @@ jobs:
       - name: Setup Go environment
         uses: actions/setup-go@v5.1.0
       
-      - name: Install Crane
-        run: go install github.com/google/go-containerregistry/cmd/crane@latest
-
       - name: Install Grype
         run: |
           curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
