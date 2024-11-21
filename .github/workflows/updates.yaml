@@ -153,22 +153,20 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.octo-sts.outputs.token }}
         run: |          
-          # Check for an existing PR from the branch
-          PR_NUMBER=$(gh pr list --head "apply-cve-fixes" --json number --jq '.[0].number')
+          PR_NUMBER=$(gh pr list --head "apply-cve-fix" --json number --jq '.[0].number')
           if [ -n "$PR_NUMBER" ]; then
             echo "Closing PR #$PR_NUMBER"
             gh pr close "$PR_NUMBER" --delete-branch
           else
-            echo "No PR found for branch 'apply-cve-fixes'"
+            echo "No PR found for branch 'apply-cve-fix'"
           fi
           
-          # Delete the branch if it exists
-          BRANCH_EXISTS=$(gh repo view --json refs --jq '.refs.nodes[].name' | grep "^apply-cve-fixes$" || true)
+          BRANCH_EXISTS=$(gh repo view --json refs --jq '.refs.nodes[].name' | grep "^apply-cve-fix$" || true)
           if [ -n "$BRANCH_EXISTS" ]; then
-            echo "Deleting branch 'apply-cve-fixes'"
-            gh api -X DELETE "/repos/${{ github.repository }}/git/refs/heads/apply-cve-fixes"
+            echo "Deleting branch 'apply-cve-fix'"
+            gh api -X DELETE "/repos/${{ github.repository }}/git/refs/heads/apply-cve-fix"
           else
-            echo "Branch 'apply-cve-fixes' does not exist."
+            echo "Branch 'apply-cve-fix' does not exist."
           fi
     
       - name: Create Pull Request
