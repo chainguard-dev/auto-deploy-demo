@@ -116,6 +116,7 @@ jobs:
         if: env.FIX_CVE == 'true'
         run: |
           grype $NEW_IMAGE -o sarif > grype-results.sarif
+          cat grype-results.sarif
 
       - name: Upload SARIF results
         if: env.FIX_CVE == 'true'
@@ -152,17 +153,25 @@ jobs:
           commit-message: 'Update images digests'
           title: 'Apply CVE Fix'
           body: |
-            "This PR remdiates CVEs: \"${{ env.CVE_LIST }}\""
-
-            "The Helm Redis Image Tag will be updated to: \"${{ env.LATEST_UNIQUE_TAG }}\""
+            This PR remdiates CVEs: ${{ env.CVE_LIST }}
+            
+            The Helm Redis Image Tag will be updated to: ${{ env.LATEST_UNIQUE_TAG }}
       
+             <details>
+            <summary>SARIF Summary</summary>
+
+            ```json
+            ${{ env.SARIF_SUMMARY }}
+            ```
+            </details>
+
             ## Changes
             <details>
-      
+            <summary>File Changes</summary>
+
             ```diff
             ${{ steps.create_pr_update.outputs.diff }}
             ```
-      
             </details>
           labels: automated pr, cve, patch
           branch: 'apply-cve-fix'
