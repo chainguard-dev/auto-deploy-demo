@@ -23,6 +23,8 @@ jobs:
 
       - name: Setup Go environment
         uses: actions/setup-go@v5.1.0
+        with:
+          cache: false
       
       - name: Install Grype
         run: |
