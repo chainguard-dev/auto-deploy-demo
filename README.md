@@ -1,4 +1,4 @@
-# Auto Update / Deploy Helm Demo
+# Auto Update a Helm Deployment
 
 * Monitor for new Chainguard Images in your dedicated registry
 * Verify integrity of the image by validating the digital signature with cosign
