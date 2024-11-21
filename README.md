@@ -6,6 +6,6 @@
 * Leverage Chainguard Unique Tags for consistency and atomic rollbacks
 
 This demo adheres to security least privilege by using short-lived ephemeral tokens to:
-* Authenticate to the Chainguard Registry using assumed identity (using ambient OIDC token for each workflow invocation)
+* Authenticate to the Chainguard Registry using an [assumed identity](https://edu.chainguard.dev/chainguard/administration/iam-organizations/assumable-ids/) (using ambient credentials unique to each workflow invocation for auth)
 * Authenticate to GitHub (using [octo-sts](https://www.chainguard.dev/unchained/the-end-of-github-pats-you-cant-leak-what-you-dont-have) in place of a long-lived PAT) 
 * Signs commits using [Sigstore/gitsign](https://docs.sigstore.dev/cosign/signing/gitsign/)
