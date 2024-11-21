@@ -160,14 +160,6 @@ jobs:
           else
             echo "No PR found for branch 'apply-cve-fix'"
           fi
-          
-          BRANCH_EXISTS=$(gh repo view --json refs --jq '.refs.nodes[].name' | grep "^apply-cve-fix$" || true)
-          if [ -n "$BRANCH_EXISTS" ]; then
-            echo "Deleting branch 'apply-cve-fix'"
-            gh api -X DELETE "/repos/${{ github.repository }}/git/refs/heads/apply-cve-fix"
-          else
-            echo "Branch 'apply-cve-fix' does not exist."
-          fi
     
       - name: Create Pull Request
         if: env.FIX_CVE == 'true'
