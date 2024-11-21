@@ -34,7 +34,7 @@ jobs:
       - name: Scan Image with Grype
         if: env.FIX_CVE == 'true'
         run: |
-          grype $REDIS_ORIG_IMAGE -o sarif > grype-results.sarif
+          grype "${{ env.REDIS_ORIG_IMAGE }}" -o sarif > grype-results.sarif
           cat grype-results.sarif
           
       - name: Upload SARIF results
