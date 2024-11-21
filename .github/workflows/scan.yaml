@@ -30,6 +30,14 @@ jobs:
         run: |
           curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
         
+      - uses: chainguard-dev/setup-chainctl@v0.2.4
+        with:
+          identity: "4cf15780a13a9b6576d8b357e6524554c8c12a18/a662f56b58103354"
+        
+      - name: 'Auth to Registry'
+        run: |
+          chainctl auth configure-docker
+          
       - name: Scan Image with Grype
         run: |
           grype "${{ env.REDIS_ORIG_IMAGE }}" -o sarif > grype-results.sarif
