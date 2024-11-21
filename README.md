@@ -9,6 +9,7 @@
   * Lists the CVEs that will be remediated with the change
   * Attaches the scan result
   * Uses Chainguard Unique Tags for consistency and atomic rollbacks
+* Deploy to a Kubernetes Cluster once PR is merged
 * Adheres to security least privilege by using short-lived ephemeral tokens to:
   * Authenticate to the Chainguard Registry using an [assumed identity](https://edu.chainguard.dev/chainguard/administration/iam-organizations/assumable-ids/) (using the ambient creds of each workflow invocation)
   * Authenticate to GitHub (using [octo-sts](https://www.chainguard.dev/unchained/the-end-of-github-pats-you-cant-leak-what-you-dont-have) in place of a long-lived PAT) 
