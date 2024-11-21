@@ -67,7 +67,7 @@ jobs:
     
     - name: Scan Image with Grype
       run: |
-        grype "${{ env.REDIS_IMAGE_FULL_REF }} " -o sarif > grype-results.sarif
+        grype "${{ env.REDIS_IMAGE_FULL_REF }}" -o sarif > grype-results.sarif
         cat grype-results.sarif
           
     - name: Upload SARIF results
