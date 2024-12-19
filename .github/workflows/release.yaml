@@ -97,6 +97,7 @@ jobs:
     - name: Deploy Redis Image using Helm
       run: |
         helm install release-redis bitnami/redis \
+          --set global.security.allowInsecureImages=true \ # https://github.com/bitnami/charts/issues/30850
           --values helm/redis/values.yaml \
           --namespace default --create-namespace
 
