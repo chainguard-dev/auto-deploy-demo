@@ -66,7 +66,6 @@ jobs:
       
       - name: Upload Prisma Cloud SARIF file
         if: ${{ env.SCAN_WITH_PRISMA_CLOUD == 'true' }}
-        if: ${{ always() }} # necessary if using failure thresholds in the image scan
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: ${{ steps.prismascan.outputs.sarif_file }}
