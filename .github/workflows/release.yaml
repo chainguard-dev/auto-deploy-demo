@@ -37,6 +37,9 @@ jobs:
     - uses: azure/setup-helm@v4.2.0
       id: install
     
+    - name: Install Cosign
+      uses: sigstore/cosign-installer@v3.7.0
+        
     - uses: chainguard-dev/setup-chainctl@v0.2.4
       with:
         identity: "4cf15780a13a9b6576d8b357e6524554c8c12a18/a662f56b58103354"
