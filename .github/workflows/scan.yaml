@@ -38,12 +38,28 @@ jobs:
         run: |
           chainctl auth configure-docker
           
-      - name: Scan Image with Grype
-        run: |
-          grype "${{ env.REDIS_ORIG_IMAGE }}" -o sarif > grype-results.sarif
-          cat grype-results.sarif
+      # - name: Scan Image with Grype
+      #   run: |
+      #     grype "${{ env.REDIS_ORIG_IMAGE }}" -o sarif > grype-results.sarif
+      #     cat grype-results.sarif
           
-      - name: Upload SARIF results
+      # - name: Upload SARIF results
+      #   uses: github/codeql-action/upload-sarif@v3
+      #   with:
+      #     sarif_file: grype-results.sarif
+
+      - name: Prisma Cloud image scan
+        id: prismascan
+        uses: PaloAltoNetworks/prisma-cloud-scan@v1.5
+        with:
+          pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
+          pcc_user: ${{ secrets.PCC_USER }}
+          pcc_pass: ${{ secrets.PCC_PASS }}
+          image_name: ${{ env.IMAGE_NAME }}
+          sarif_file: prisma-results.sarif
+          twistcli_publish: true
+
+      - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: grype-results.sarif
+          sarif_file: ${{ steps.prismascan.outputs.sarif_file }}
