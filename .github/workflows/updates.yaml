@@ -156,7 +156,7 @@ jobs:
         id: extract_prisma_link
         run: |
           sarif_file=${{ steps.prismascan.outputs.sarif_file }}
-          PRISMA_CLOUD_URL=$(cat "$sarif_file" | jq '.consoleURL')
+          PRISMA_CLOUD_URL=$(cat "$sarif_file" | jq -r '.consoleURL')
           echo "PRISMA_CLOUD_URL=$PRISMA_CLOUD_URL" >> $GITHUB_ENV
             
       - name: Update Helm Values
