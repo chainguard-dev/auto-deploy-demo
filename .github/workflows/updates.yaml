@@ -137,7 +137,7 @@ jobs:
           pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
           pcc_user: ${{ secrets.PCC_USER }}
           pcc_pass: ${{ secrets.PCC_PASS }}
-          image_name: "${{ env.REDIS_ORIG_IMAGE }}"
+          image_name: $NEW_IMAGE
       
       - name: Upload Prisma Cloud SARIF file
         if: env.FIX_CVE == 'true' && env.SCAN_WITH_PRISMA_CLOUD == 'true'
