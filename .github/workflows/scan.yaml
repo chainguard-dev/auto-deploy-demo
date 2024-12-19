@@ -48,16 +48,13 @@ jobs:
       #   with:
       #     sarif_file: grype-results.sarif
 
-      - name: Prisma Cloud image scan
-        id: prismascan
-        uses: PaloAltoNetworks/prisma-cloud-scan@v1.5
+      - name: Run Prisma Cloud 
+        id: prisma-cloud
+        uses: bridgecrewio/checkov-action@master
+        env:
+          PRISMA_API_URL: https://api.prismacloud.io
         with:
-          pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
-          pcc_user: ${{ secrets.PCC_USER }}
-          pcc_pass: ${{ secrets.PCC_PASS }}
-          image_name: "${{ env.REDIS_ORIG_IMAGE }}"
-          sarif_file: prisma-results.sarif
-          twistcli_publish: true
+          api-key: ${{ secrets.BC_API_KEY }}
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
