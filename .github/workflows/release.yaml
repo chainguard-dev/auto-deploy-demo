@@ -15,99 +15,96 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      packages: write
+      actions: read
       security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+      contents: read
+      packages: write      
       id-token: write
     steps:
-    
-    - uses: actions/checkout@v4
-      with:
-          fetch-depth: 1
-    
-    - name: Setup Go environment
-      uses: actions/setup-go@v5.1.0
-      with:
-        cache: false
-    
-    - name: Install Grype
-      run: |
-        curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
-    
-    - uses: azure/setup-helm@v4.2.0
-      id: install
-    
-    - name: Install Cosign
-      uses: sigstore/cosign-installer@v3.7.0
-        
-    - uses: chainguard-dev/setup-chainctl@v0.2.4
-      with:
-        identity: "4cf15780a13a9b6576d8b357e6524554c8c12a18/a662f56b58103354"
-    
-    - name: 'Auth to Registry'
-      run: |
-        chainctl auth configure-docker
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
 
-    - name: Extract unique image.tag value
-      id: extract_unique_tag
-      run: |
-        CURRENT_UNIQUE_IMAGE=$(yq '.image.tag' helm/redis/values.yaml)
-        echo "Extracted Unique Tags: $CURRENT_UNIQUE_IMAGE"
-        echo "CURRENT_UNIQUE_TAG=$CURRENT_UNIQUE_IMAGE" >> $GITHUB_ENV
-    
-    - name: Setup image full ref env var
-      id: setup_full_image_ref
-      run: |
-        REDIS_IMAGE_FULL_REF="${{ env.REDIS_IMAGE_NAME }}:${{ env.CURRENT_UNIQUE_TAG }}"
-        echo "REDIS_IMAGE_FULL_REF=$REDIS_IMAGE_FULL_REF" >> $GITHUB_ENV
-
-    - name: 'Verify Redis Image Signature && pre-pull image'
-      run: |
-        cosign verify \
-            --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
-            --certificate-identity=https://github.com/chainguard-images/images-private/.github/workflows/release.yaml@refs/heads/main \
-            ${{ env.REDIS_IMAGE_FULL_REF }} | jq        
-        docker pull ${{ env.REDIS_IMAGE_FULL_REF }}
-    
-    - name: Scan Image with Grype
-      run: |
-        grype "${{ env.REDIS_IMAGE_FULL_REF }}" -o sarif > grype-results.sarif
-        cat grype-results.sarif
+      - name: Setup Go environment
+        uses: actions/setup-go@v5.1.0
+        with:
+          cache: false
+      
+      - uses: octo-sts/action@6177b4481c00308b3839969c3eca88c96a91775f # v1.0.0
+        id: octo-sts
+        with:
+          scope: chainguard-dev/auto-deploy-demo
+          identity: updates
           
-    - name: Upload SARIF results
-      uses: github/codeql-action/upload-sarif@v3
-      with:
-        sarif_file: grype-results.sarif
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.7.0
+      
+      - uses: chainguard-dev/setup-chainctl@v0.2.4
+        with:
+          identity: "4cf15780a13a9b6576d8b357e6524554c8c12a18/a662f56b58103354"
+        
+      - name: 'Auth to Registry'
+        run: |
+          chainctl auth configure-docker
+    
+      - uses: azure/setup-helm@v4.2.0
+        id: install
+        
+      - name: 'Auth to Registry'
+        run: |
+          chainctl auth configure-docker
+
+      - name: Extract unique image.tag value
+        id: extract_unique_tag
+        run: |
+          CURRENT_UNIQUE_IMAGE=$(yq '.image.tag' helm/redis/values.yaml)
+          echo "Extracted Unique Tags: $CURRENT_UNIQUE_IMAGE"
+          echo "CURRENT_UNIQUE_TAG=$CURRENT_UNIQUE_IMAGE" >> $GITHUB_ENV
+      
+      - name: Setup image full ref env var
+        id: setup_full_image_ref
+        run: |
+          REDIS_IMAGE_FULL_REF="${{ env.REDIS_IMAGE_NAME }}:${{ env.CURRENT_UNIQUE_TAG }}"
+          echo "REDIS_IMAGE_FULL_REF=$REDIS_IMAGE_FULL_REF" >> $GITHUB_ENV
   
-    - name: Add Bitnami Helm repository
-      run: |
-        helm repo add bitnami https://charts.bitnami.com/bitnami
-        helm repo update
-
-    - name: Create k8s Kind Cluster
-      uses: helm/kind-action@v1
-      with:
-        cluster_name: kind-smoke-test
-
-    - name: Check if image is available in kind cluster
-      run: |
-        kind load docker-image ${{ env.REDIS_IMAGE_FULL_REF }} --name kind-smoke-test
-        echo "Image loaded into Kind cluster"
-
-    - name: Deploy Redis Image using Helm
-      run: |
-        helm install release-redis bitnami/redis \
-          --set global.security.allowInsecureImages=true \ # https://github.com/bitnami/charts/issues/30850
-          --values helm/redis/values.yaml \
-          --namespace default --create-namespace
-
-    - name: Verify Redis Successful Deployment
-      run: |
-        kubectl get all -n default
-        kubectl rollout status deployment.apps/release-redis-master --timeout=120s
-        kubectl get all -n default
-
-    - name: Delete Kind Cluster
-      if: always()
-      run: |
-        kind delete cluster --name kind-smoke-test
+      - name: 'Verify Redis Image Signature && pre-pull image'
+        run: |
+          cosign verify \
+              --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
+              --certificate-identity=https://github.com/chainguard-images/images-private/.github/workflows/release.yaml@refs/heads/main \
+              ${{ env.REDIS_IMAGE_FULL_REF }} | jq        
+          docker pull ${{ env.REDIS_IMAGE_FULL_REF }}
+      
+      - name: Add Bitnami Helm repository
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo update
+  
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1
+        with:
+          cluster_name: kind-smoke-test
+  
+      - name: Check if image is available in kind cluster
+        run: |
+          kind load docker-image ${{ env.REDIS_IMAGE_FULL_REF }} --name kind-smoke-test
+          echo "Image loaded into Kind cluster"
+  
+      - name: Deploy Redis Image using Helm
+        run: |
+          helm install release-redis bitnami/redis \
+            --set global.security.allowInsecureImages=true \ # https://github.com/bitnami/charts/issues/30850
+            --values helm/redis/values.yaml \
+            --namespace default --create-namespace
+  
+      - name: Verify Redis Successful Deployment
+        run: |
+          kubectl get all -n default
+          kubectl rollout status deployment.apps/release-redis-master --timeout=120s
+          kubectl get all -n default
+  
+      - name: Delete Kind Cluster
+        if: always()
+        run: |
+          kind delete cluster --name kind-smoke-test
