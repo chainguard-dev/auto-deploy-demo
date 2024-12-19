@@ -3,7 +3,7 @@
 * Monitor for new Chainguard Images in your dedicated registry
 * Verify integrity of the image by validating the digital signature with cosign
 * Use chainctl image diff to determine if the new image remediates a Critical or High CVE
-* Scan the image with grype
+* Scan the image with grype and Prisma Cloud
 * Create a PR that:
   * Updates Helm with new image
   * Lists the CVEs that will be remediated with the change
