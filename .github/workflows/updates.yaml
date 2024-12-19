@@ -111,7 +111,6 @@ jobs:
           if [ -n "$CVE_LIST_JSON" ]; then
             echo "Found CVE fixes for the following CVES: $CVE_LIST_JSON"
             echo "FIX_CVE=true" >> $GITHUB_ENV
-            docker pull $NEW_IMAGE 
           else
             echo "No CVE fixes available"
             echo "FIX_CVE=false" >> $GITHUB_ENV
@@ -144,7 +143,7 @@ jobs:
           pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
           pcc_user: ${{ secrets.PCC_USER }}
           pcc_pass: ${{ secrets.PCC_PASS }}
-          image_name: $NEW_IMAGE
+          image_name: "${{ env.NEW_IMAGE }}"
       
       - name: Upload Prisma Cloud SARIF file
         if: env.FIX_CVE == 'true' && env.SCAN_WITH_PRISMA_CLOUD == 'true'
