@@ -55,7 +55,7 @@ jobs:
           pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
           pcc_user: ${{ secrets.PCC_USER }}
           pcc_pass: ${{ secrets.PCC_PASS }}
-          image_name: ${{ env.IMAGE_NAME }}
+          image_name: "${{ env.REDIS_ORIG_IMAGE }}"
           sarif_file: prisma-results.sarif
           twistcli_publish: true
 
