@@ -212,7 +212,7 @@ jobs:
             </details>
 
             ## Prisma Cloud Console Link
-            [View detailed scan results in Prisma Cloud Console](${{ env.prisma_console_link }})
+            [View detailed scan results in Prisma Cloud Console](${{ env.PRISMA_CLOUD_URL }})
 
             ## Changes
             <details>
