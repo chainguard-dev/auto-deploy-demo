@@ -59,4 +59,4 @@ jobs:
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: ${{ steps.prismascan.outputs.sarif_file }}
+          sarif_file: ${{ steps.prisma-cloud.outputs.sarif_file }}
