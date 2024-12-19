@@ -44,10 +44,6 @@ jobs:
     
       - uses: azure/setup-helm@v4.2.0
         id: install
-        
-      - name: 'Auth to Registry'
-        run: |
-          chainctl auth configure-docker
 
       - name: Extract unique image.tag value
         id: extract_unique_tag
