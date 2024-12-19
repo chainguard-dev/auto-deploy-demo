@@ -8,9 +8,3 @@ claim_pattern:
 
 permissions:
   contents: write
-  pull_requests: write
-  workflows: write
-  actions: write
-  security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
-  packages: write
-  id-token: write
