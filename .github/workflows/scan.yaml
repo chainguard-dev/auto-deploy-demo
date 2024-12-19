@@ -5,6 +5,8 @@ on:
 
 env:
   REDIS_ORIG_IMAGE: "cgr.dev/cgr-demo.com/redis-server-bitnami:7.0.13-r3-202310161618"
+  SCAN_WITH_GRYPE: "false"
+  SCAN_WITH_PRISMA_CLOUD: "true"
   
 jobs:
   scan-existing-image:
@@ -27,6 +29,7 @@ jobs:
           cache: false
       
       - name: Install Grype
+        if: ${{ env.SCAN_WITH_GRYPE == 'true' }}
         run: |
           curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
         
@@ -39,17 +42,20 @@ jobs:
           chainctl auth configure-docker
           docker pull "${{ env.REDIS_ORIG_IMAGE }}"
           
-      # - name: Scan Image with Grype
-      #   run: |
-      #     grype "${{ env.REDIS_ORIG_IMAGE }}" -o sarif > grype-results.sarif
-      #     cat grype-results.sarif
+      - name: Scan Image with Grype
+        if: ${{ env.SCAN_WITH_GRYPE == 'true' }}
+        run: |
+          grype "${{ env.REDIS_ORIG_IMAGE }}" -o sarif > grype-results.sarif
+          cat grype-results.sarif
           
-      # - name: Upload SARIF results
-      #   uses: github/codeql-action/upload-sarif@v3
-      #   with:
-      #     sarif_file: grype-results.sarif
+      - name: Upload Grype SARIF results
+        if: ${{ env.SCAN_WITH_GRYPE == 'true' }}
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: grype-results.sarif
 
       - name: Prisma Cloud image scan
+        if: ${{ env.SCAN_WITH_PRISMA_CLOUD == 'true' }}
         id: prismascan
         uses: PaloAltoNetworks/prisma-cloud-scan@v1.6.7
         with:
@@ -58,7 +64,8 @@ jobs:
           pcc_pass: ${{ secrets.PCC_PASS }}
           image_name: "${{ env.REDIS_ORIG_IMAGE }}"
       
-      - name: Upload SARIF file
+      - name: Upload Prisma Cloud SARIF file
+        if: ${{ env.SCAN_WITH_PRISMA_CLOUD == 'true' }}
         if: ${{ always() }} # necessary if using failure thresholds in the image scan
         uses: github/codeql-action/upload-sarif@v3
         with:
