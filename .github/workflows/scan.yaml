@@ -54,9 +54,11 @@ jobs:
         env:
           PRISMA_API_URL: https://api.prismacloud.io
         with:
+          output_format: cli,sarif
+          output_file_path: console,prismaresults.sarif
           api-key: ${{ secrets.BC_API_KEY }}
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: ${{ steps.prisma-cloud.outputs.sarif_file }}
+          sarif_file: ${{ steps.prisma-cloud.outputs.prismaresults.sarif }}
