@@ -156,8 +156,8 @@ jobs:
         id: extract_prisma_link
         run: |
           sarif_file=${{ steps.prismascan.outputs.sarif_file }}
-          link=$(jq -r '.runs[].results[].properties.link' "$sarif_file")
-          echo "prisma_console_link=$link" >> $GITHUB_ENV
+          PRISMA_CLOUD_URL=$(cat "$sarif_file" | jq '.consoleURL')
+          echo "PRISMA_CLOUD_URL=$PRISMA_CLOUD_URL" >> $GITHUB_ENV
             
       - name: Update Helm Values
         if: env.FIX_CVE == 'true'
