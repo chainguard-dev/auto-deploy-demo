@@ -8,3 +8,8 @@ claim_pattern:
 
 permissions:
   contents: write
+  pull_requests: write
+  workflows: write
+  secret_scanning_alerts: write
+  security_events: write
+  vulnerability_alerts: write
