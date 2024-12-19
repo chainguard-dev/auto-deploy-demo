@@ -12,6 +12,8 @@ on:
 
 env:
   REDIS_IMAGE: "cgr.dev/cgr-demo.com/redis-server-bitnami"
+  SCAN_WITH_GRYPE: "true"
+  SCAN_WITH_PRISMA_CLOUD: "true"
   
 jobs:
   check-for-fixes:
@@ -43,6 +45,7 @@ jobs:
         run: go install github.com/google/go-containerregistry/cmd/crane@latest
 
       - name: Install Grype
+        if: ${{ env.SCAN_WITH_GRYPE == 'true' }}
         run: |
           curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
         
@@ -114,18 +117,42 @@ jobs:
           fi
     
       - name: Scan New Image with Grype
-        if: env.FIX_CVE == 'true'
+        if: env.FIX_CVE == 'true' && env.SCAN_WITH_GRYPE == 'true'
         run: |
           grype $NEW_IMAGE -o sarif > grype-results.sarif
           SARIF_SUMMARY=$(grype $NEW_IMAGE 2>&1 | tee)
           echo "SARIF_SUMMARY=${SARIF_SUMMARY}" >> $GITHUB_ENV
 
       - name: Upload SARIF results
-        if: env.FIX_CVE == 'true'
+        if: env.FIX_CVE == 'true' && env.SCAN_WITH_GRYPE == 'true'
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: grype-results.sarif
+
+      - name: Prisma Cloud image scan
+        if: env.FIX_CVE == 'true' && env.SCAN_WITH_PRISMA_CLOUD == 'true'
+        id: prismascan
+        uses: PaloAltoNetworks/prisma-cloud-scan@v1.6.7
+        with:
+          pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
+          pcc_user: ${{ secrets.PCC_USER }}
+          pcc_pass: ${{ secrets.PCC_PASS }}
+          image_name: "${{ env.REDIS_ORIG_IMAGE }}"
       
+      - name: Upload Prisma Cloud SARIF file
+        if: env.FIX_CVE == 'true' && env.SCAN_WITH_PRISMA_CLOUD == 'true'
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ steps.prismascan.outputs.sarif_file }}
+
+      - name: Extract Prisma Cloud Console Link
+        if: env.FIX_CVE == 'true' && env.SCAN_WITH_PRISMA_CLOUD == 'true'
+        id: extract_prisma_link
+        run: |
+          sarif_file=${{ steps.prismascan.outputs.sarif_file }}
+          link=$(jq -r '.runs[].results[].properties.link' "$sarif_file")
+          echo "prisma_console_link=$link" >> $GITHUB_ENV
+            
       - name: Update Helm Values
         if: env.FIX_CVE == 'true'
         shell: bash
@@ -176,6 +203,9 @@ jobs:
             ${{ env.SARIF_SUMMARY }}
             ```
             </details>
+
+            ## Prisma Cloud Console Link
+            [View detailed scan results in Prisma Cloud Console](${{ env.prisma_console_link }})
 
             ## Changes
             <details>
