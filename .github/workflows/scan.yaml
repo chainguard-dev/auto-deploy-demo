@@ -48,17 +48,17 @@ jobs:
       #   with:
       #     sarif_file: grype-results.sarif
 
-      - name: Run Prisma Cloud 
-        id: prisma-cloud
-        uses: bridgecrewio/checkov-action@master
-        env:
-          PRISMA_API_URL: https://api.prismacloud.io
+      - name: Prisma Cloud image scan
+        id: scan
+        uses: PaloAltoNetworks/prisma-cloud-scan@v1.6.7
         with:
-          output_format: cli,sarif
-          output_file_path: console,prismaresults.sarif
-          api-key: ${{ secrets.BC_API_KEY }}
-
+          pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
+          pcc_user: ${{ secrets.PCC_USER }}
+          pcc_pass: ${{ secrets.PCC_PASS }}
+          image_name: ${{ env.IMAGE_NAME }}
+      
       - name: Upload SARIF file
+        if: ${{ always() }} # necessary if using failure thresholds in the image scan
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: prismaresults.sarif
+          sarif_file: ${{ steps.scan.outputs.sarif_file }}
