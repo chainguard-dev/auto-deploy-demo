@@ -105,7 +105,7 @@ jobs:
         id: diff_vulnerabilities
         run: |
 
-          CVE_LIST_JSON=$(chainctl images diff "${{ env.OLD_IMAGE }}" "${{ env.NEW_IMAGE }}" 2>/dev/null | jq -c '[.vulnerabilities.removed[] | select(.severity == "Critical" or .severity == "High") | .id]')
+          CVE_LIST_JSON=$(chainctl images diff "${{ env.OLD_IMAGE }}" "${{ env.NEW_IMAGE }}" 2>/dev/null | jq -c 'select(.vulnerabilities.removed != null) | [.vulnerabilities.removed[] | select(.severity == "Critical" or .severity == "High") | .id]')
           echo "CVE_LIST=$CVE_LIST_JSON" >> $GITHUB_ENV
 
           if [ -n "$CVE_LIST_JSON" ]; then
