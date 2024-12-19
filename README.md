@@ -18,6 +18,6 @@
 ## Usage
 
 * Run the scan workflow will populate the scan data for the very old redis-server-bitnami image: ![image](https://github.com/user-attachments/assets/ebdaca95-efbd-4fe2-a7f1-3b61d782466a)
-* Run the updates workflow to generate a PR with the fixes and scan results: ![image](https://github.com/user-attachments/assets/62dee720-e592-488d-836b-2364dc8e8729)
+* Run the updates workflow to generate a PR and updated scan results for both Grype and PrismaCloud ![image](https://github.com/user-attachments/assets/35d81334-3f2c-4263-9e1a-6f6f2dc6f145)
 * Merge
 * Profit ![image](https://github.com/user-attachments/assets/c0c7b2ef-9963-44d0-981c-db87bf1ce900) ![image](https://github.com/user-attachments/assets/3b8e1090-1520-41de-9b2e-7f36b0a464f0)
