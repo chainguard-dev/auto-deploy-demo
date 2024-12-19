@@ -11,7 +11,7 @@ env:
   REDIS_IMAGE_NAME: "cgr.dev/cgr-demo.com/redis-server-bitnami"
 
 jobs:
-  build:
+  deploy:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
