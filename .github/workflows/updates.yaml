@@ -2,13 +2,8 @@ name: updates
 
 on:
   schedule:
-    - cron: "*/60 * * * *" # Every 60 minutes
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/updates.yaml'
-      - '.github/chainguard/updates.sts.yaml'
-  workflow_dispatch: # Allows manual triggering
+    - cron: '0 * * * *'  # Hourly
+  workflow_dispatch: # Allows manual triggering 
 
 env:
   REDIS_IMAGE: "cgr.dev/cgr-demo.com/redis-server-bitnami"
