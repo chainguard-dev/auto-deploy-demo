@@ -31,12 +31,6 @@ jobs:
         with:
           cache: false
       
-      - uses: octo-sts/action@6177b4481c00308b3839969c3eca88c96a91775f # v1.0.0
-        id: octo-sts
-        with:
-          scope: chainguard-dev/auto-deploy-demo
-          identity: updates
-          
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3.7.0
       
