@@ -123,7 +123,22 @@ jobs:
           SARIF_SUMMARY=$(grype $NEW_IMAGE 2>&1 | tee)
           echo "SARIF_SUMMARY=${SARIF_SUMMARY}" >> $GITHUB_ENV
 
-      - name: Upload SARIF results
+      - name: Clear outdated SARIF
+        if: env.FIX_CVE == 'true'
+        run: |
+          ORGANIZATION="chainguard-dev"
+          REPOSITORY="auto-deploy-demo"
+          
+          echo "Retrieving all analysis results in $ORGANIZATION/$REPOSITORY"
+          ANALYSIS_IDS=$(gh api -X GET "repos/$ORGANIZATION/$REPOSITORY/code-scanning/analyses?per_page=100&direction=asc" --paginate --jq='.[] | select(.deletable==true) | .id')
+          
+          for analysis_id in ${ANALYSIS_IDS}
+          do
+            echo "Deleting analysis result $analysis_id"
+            gh api -X DELETE "repos/$ORGANIZATION/$REPOSITORY/code-scanning/analyses/$analysis_id?confirm_delete=true" --silent
+          done
+      
+      - name: Upload new Grype SARIF results
         if: env.FIX_CVE == 'true' && env.SCAN_WITH_GRYPE == 'true'
         uses: github/codeql-action/upload-sarif@v3
         with:
@@ -145,7 +160,7 @@ jobs:
           pcc_pass: ${{ secrets.PCC_PASS }}
           image_name: "${{ env.NEW_IMAGE }}"
       
-      - name: Upload Prisma Cloud SARIF file
+      - name: Upload new Prisma Cloud SARIF file
         if: env.FIX_CVE == 'true' && env.SCAN_WITH_PRISMA_CLOUD == 'true'
         uses: github/codeql-action/upload-sarif@v3
         with:
@@ -159,7 +174,7 @@ jobs:
           PRISMA_CLOUD_URL=$(cat "$results_file" | jq -r '.consoleURL')
           echo "PRISMA_CLOUD_URL=$PRISMA_CLOUD_URL"
           echo "PRISMA_CLOUD_URL=$PRISMA_CLOUD_URL" >> $GITHUB_ENV
-            
+          
       - name: Update Helm Values
         if: env.FIX_CVE == 'true'
         shell: bash
