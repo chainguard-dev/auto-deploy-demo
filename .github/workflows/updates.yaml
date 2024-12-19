@@ -111,6 +111,7 @@ jobs:
           if [ -n "$CVE_LIST_JSON" ]; then
             echo "Found CVE fixes for the following CVES: $CVE_LIST_JSON"
             echo "FIX_CVE=true" >> $GITHUB_ENV
+            docker pull $NEW_IMAGE 
           else
             echo "No CVE fixes available"
             echo "FIX_CVE=false" >> $GITHUB_ENV
@@ -129,6 +130,12 @@ jobs:
         with:
           sarif_file: grype-results.sarif
 
+      - name: Pre-pull docker image for Prisma Cloud scan
+        if: env.FIX_CVE == 'true' && env.SCAN_WITH_PRISMA_CLOUD == 'true'
+        run: |
+          # Prisma Cloud can only see the image if it's pre-pulled locally
+            docker pull $NEW_IMAGE
+      
       - name: Prisma Cloud image scan
         if: env.FIX_CVE == 'true' && env.SCAN_WITH_PRISMA_CLOUD == 'true'
         id: prismascan
