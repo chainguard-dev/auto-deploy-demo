@@ -37,6 +37,7 @@ jobs:
       - name: 'Auth to Registry'
         run: |
           chainctl auth configure-docker
+          docker pull "${{ env.REDIS_ORIG_IMAGE }}"
           
       # - name: Scan Image with Grype
       #   run: |
@@ -49,7 +50,7 @@ jobs:
       #     sarif_file: grype-results.sarif
 
       - name: Prisma Cloud image scan
-        id: scan
+        id: prismascan
         uses: PaloAltoNetworks/prisma-cloud-scan@v1.6.7
         with:
           pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
@@ -61,4 +62,4 @@ jobs:
         if: ${{ always() }} # necessary if using failure thresholds in the image scan
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: ${{ steps.scan.outputs.sarif_file }}
+          sarif_file: ${{ steps.prismascan.outputs.sarif_file }}
