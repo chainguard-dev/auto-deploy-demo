@@ -1,11 +1,11 @@
 {
 	"results": [
 		{
-			"id": "sha256:e023f556edaf4f901d974ad7bc4930a7fc4fab037471a7e5baf488531c68b7de",
-			"name": "cgr.dev/cgr-demo.com/redis-server-bitnami:7.4.1-r0-202412141645",
+			"id": "sha256:69f3634101bbc1cef21b9584588f20f2697ff82b132189e6c2639d6d3f0a064b",
+			"name": "cgr.dev/cgr-demo.com/redis-server-bitnami:7.4.2-r0-202501081559",
 			"distro": "Chainguard",
 			"distroRelease": "20230214",
-			"digest": "sha256:7ade4d608dfbcc11d612ae6ec42befb570cbe3262ff19e34c77f37671ef9fc10",
+			"digest": "sha256:7e016701932fcff0f9e1bd2eca35862b1fdea4ec728b99214fff9e521d23a141",
 			"collections": [
 				"All"
 			],
@@ -45,7 +45,7 @@
 				{
 					"type": "os",
 					"name": "libxcrypt",
-					"version": "4.4.36-r8",
+					"version": "4.4.37-r0",
 					"licenses": [
 						"GPL-2.0-or-later AND LGPL-2.1-or-later"
 					]
@@ -68,6 +68,38 @@
 				},
 				{
 					"type": "os",
+					"name": "ncurses",
+					"version": "6.5_p20241228-r0",
+					"licenses": [
+						"MIT"
+					]
+				},
+				{
+					"type": "os",
+					"name": "gcc",
+					"version": "14.2.0-r7",
+					"licenses": [
+						"GPL-3.0-or-later WITH GCC-exception-3.1"
+					]
+				},
+				{
+					"type": "os",
+					"name": "ca-certificates",
+					"version": "20241121-r1",
+					"licenses": [
+						"MPL-2.0 AND MIT"
+					]
+				},
+				{
+					"type": "os",
+					"name": "redis-7.4",
+					"version": "7.4.2-r0",
+					"licenses": [
+						"SSPL-1.0"
+					]
+				},
+				{
+					"type": "os",
 					"name": "glibc",
 					"version": "2.40-r3",
 					"licenses": [
@@ -77,7 +109,7 @@
 				{
 					"type": "os",
 					"name": "openssl",
-					"version": "3.4.0-r4",
+					"version": "3.4.0-r5",
 					"licenses": [
 						"Apache-2.0"
 					]
@@ -99,36 +131,34 @@
 					]
 				},
 				{
-					"type": "os",
-					"name": "ncurses",
-					"version": "6.5_p20241006-r4",
-					"licenses": [
-						"MIT"
-					]
+					"type": "go",
+					"name": "internal/itoa",
+					"version": "1.23.1",
+					"path": "/usr/bin/wait-for-port"
 				},
 				{
-					"type": "os",
-					"name": "gcc",
-					"version": "14.2.0-r6",
-					"licenses": [
-						"GPL-3.0-or-later WITH GCC-exception-3.1"
-					]
+					"type": "go",
+					"name": "sync/atomic",
+					"version": "1.23.1",
+					"path": "/usr/bin/wait-for-port"
 				},
 				{
-					"type": "os",
-					"name": "ca-certificates",
-					"version": "20241010-r2",
-					"licenses": [
-						"MPL-2.0 AND MIT"
-					]
+					"type": "go",
+					"name": "internal/runtime/atomic",
+					"version": "1.23.1",
+					"path": "/usr/bin/wait-for-port"
 				},
 				{
-					"type": "os",
-					"name": "redis-7.4",
-					"version": "7.4.1-r0",
-					"licenses": [
-						"SSPL-1.0"
-					]
+					"type": "go",
+					"name": "internal/chacha8rand",
+					"version": "1.23.1",
+					"path": "/usr/bin/wait-for-port"
+				},
+				{
+					"type": "go",
+					"name": "os/signal",
+					"version": "1.23.1",
+					"path": "/usr/bin/wait-for-port"
 				},
 				{
 					"type": "go",
@@ -138,19 +168,67 @@
 				},
 				{
 					"type": "go",
-					"name": "internal/poll",
+					"name": "strconv",
 					"version": "1.23.1",
 					"path": "/usr/bin/wait-for-port"
 				},
 				{
 					"type": "go",
-					"name": "unique",
+					"name": "golang.org/x/sys/unix",
+					"version": "v0.21.0",
+					"path": "/usr/bin/wait-for-port"
+				},
+				{
+					"type": "go",
+					"name": "internal/stringslite",
+					"version": "1.23.1",
+					"path": "/usr/bin/wait-for-port"
+				},
+				{
+					"type": "go",
+					"name": "runtime/internal/sys",
+					"version": "1.23.1",
+					"path": "/usr/bin/wait-for-port"
+				},
+				{
+					"type": "go",
+					"name": "internal/runtime/syscall",
+					"version": "1.23.1",
+					"path": "/usr/bin/wait-for-port"
+				},
+				{
+					"type": "go",
+					"name": "os",
+					"version": "1.23.1",
+					"path": "/usr/bin/wait-for-port"
+				},
+				{
+					"type": "go",
+					"name": "net/netip",
+					"version": "1.23.1",
+					"path": "/usr/bin/wait-for-port"
+				},
+				{
+					"type": "go",
+					"name": "internal/byteorder",
+					"version": "1.23.1",
+					"path": "/usr/bin/wait-for-port"
+				},
+				{
+					"type": "go",
+					"name": "vendor/golang.org/x/net/dns/dnsmessage",
 					"version": "1.23.1",
 					"path": "/usr/bin/wait-for-port"
 				},
 				{
 					"type": "go",
 					"name": "errors",
+					"version": "1.23.1",
+					"path": "/usr/bin/wait-for-port"
+				},
+				{
+					"type": "go",
+					"name": "sync",
 					"version": "1.23.1",
 					"path": "/usr/bin/wait-for-port"
 				},
@@ -168,67 +246,7 @@
 				},
 				{
 					"type": "go",
-					"name": "os",
-					"version": "1.23.1",
-					"path": "/usr/bin/wait-for-port"
-				},
-				{
-					"type": "go",
-					"name": "internal/runtime/syscall",
-					"version": "1.23.1",
-					"path": "/usr/bin/wait-for-port"
-				},
-				{
-					"type": "go",
-					"name": "os/signal",
-					"version": "1.23.1",
-					"path": "/usr/bin/wait-for-port"
-				},
-				{
-					"type": "go",
-					"name": "net",
-					"version": "1.23.1",
-					"path": "/usr/bin/wait-for-port"
-				},
-				{
-					"type": "go",
-					"name": "internal/itoa",
-					"version": "1.23.1",
-					"path": "/usr/bin/wait-for-port"
-				},
-				{
-					"type": "go",
-					"name": "sync/atomic",
-					"version": "1.23.1",
-					"path": "/usr/bin/wait-for-port"
-				},
-				{
-					"type": "go",
-					"name": "io/fs",
-					"version": "1.23.1",
-					"path": "/usr/bin/wait-for-port"
-				},
-				{
-					"type": "go",
-					"name": "runtime",
-					"version": "1.23.1",
-					"path": "/usr/bin/wait-for-port"
-				},
-				{
-					"type": "go",
-					"name": "sync",
-					"version": "1.23.1",
-					"path": "/usr/bin/wait-for-port"
-				},
-				{
-					"type": "go",
-					"name": "internal/byteorder",
-					"version": "1.23.1",
-					"path": "/usr/bin/wait-for-port"
-				},
-				{
-					"type": "go",
-					"name": "internal/runtime/atomic",
+					"name": "internal/syscall/unix",
 					"version": "1.23.1",
 					"path": "/usr/bin/wait-for-port"
 				},
@@ -240,7 +258,7 @@
 				},
 				{
 					"type": "go",
-					"name": "internal/chacha8rand",
+					"name": "io/fs",
 					"version": "1.23.1",
 					"path": "/usr/bin/wait-for-port"
 				},
@@ -252,25 +270,7 @@
 				},
 				{
 					"type": "go",
-					"name": "runtime/internal/sys",
-					"version": "1.23.1",
-					"path": "/usr/bin/wait-for-port"
-				},
-				{
-					"type": "go",
-					"name": "internal/bytealg",
-					"version": "1.23.1",
-					"path": "/usr/bin/wait-for-port"
-				},
-				{
-					"type": "go",
-					"name": "golang.org/x/sys/unix",
-					"version": "v0.21.0",
-					"path": "/usr/bin/wait-for-port"
-				},
-				{
-					"type": "go",
-					"name": "net/netip",
+					"name": "net",
 					"version": "1.23.1",
 					"path": "/usr/bin/wait-for-port"
 				},
@@ -282,38 +282,38 @@
 				},
 				{
 					"type": "go",
-					"name": "strconv",
+					"name": "internal/poll",
 					"version": "1.23.1",
 					"path": "/usr/bin/wait-for-port"
 				},
 				{
 					"type": "go",
-					"name": "vendor/golang.org/x/net/dns/dnsmessage",
+					"name": "unique",
 					"version": "1.23.1",
 					"path": "/usr/bin/wait-for-port"
 				},
 				{
 					"type": "go",
-					"name": "internal/syscall/unix",
+					"name": "internal/bytealg",
 					"version": "1.23.1",
 					"path": "/usr/bin/wait-for-port"
 				},
 				{
 					"type": "go",
-					"name": "internal/stringslite",
+					"name": "runtime",
 					"version": "1.23.1",
-					"path": "/usr/bin/wait-for-port"
-				},
-				{
-					"type": "go",
-					"name": "github.com/jessevdk/go-flags",
-					"version": "v1.6.1",
 					"path": "/usr/bin/wait-for-port"
 				},
 				{
 					"type": "go",
 					"name": "golang.org/x/sys",
 					"version": "v0.21.0",
+					"path": "/usr/bin/wait-for-port"
+				},
+				{
+					"type": "go",
+					"name": "github.com/jessevdk/go-flags",
+					"version": "v1.6.1",
 					"path": "/usr/bin/wait-for-port"
 				}
 			],
@@ -325,7 +325,7 @@
 				},
 				{
 					"name": "redis-server",
-					"version": "14.2.0",
+					"version": "7.4.2",
 					"path": "/usr/bin/redis-server"
 				}
 			],
@@ -347,13 +347,13 @@
 			"vulnerabilityScanPassed": true,
 			"history": [
 				{
-					"created": "2024-12-12T00:51:33Z",
+					"created": "2025-01-08T14:05:43Z",
 					"instruction": "RUN apko"
 				}
 			],
-			"scanTime": "2024-12-19T19:20:16.216866149Z",
-			"scanID": "676471f0e666b670b910fa1e"
+			"scanTime": "2025-01-11T16:06:42.697945628Z",
+			"scanID": "67829712a3bac9ee20b72794"
 		}
 	],
-	"consoleURL": "https://app.prismacloud.io/compute?computeState=/monitor/vulnerabilities/images/ci?search%3Dsha256%253Ae023f556edaf4f901d974ad7bc4930a7fc4fab037471a7e5baf488531c68b7de"
+	"consoleURL": "https://app.prismacloud.io/compute?computeState=/monitor/vulnerabilities/images/ci?search%3Dsha256%253A69f3634101bbc1cef21b9584588f20f2697ff82b132189e6c2639d6d3f0a064b"
 }
