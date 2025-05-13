@@ -9,6 +9,7 @@ env:
   REDIS_IMAGE: "cgr.dev/cgr-demo.com/redis-server-bitnami"
   SCAN_WITH_GRYPE: "true"
   SCAN_WITH_PRISMA_CLOUD: "true"
+  OBJC_DISABLE_INITIALIZE_FORK_SAFETY: "YES"
   
 jobs:
   check-for-fixes:
