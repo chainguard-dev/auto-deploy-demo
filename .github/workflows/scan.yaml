@@ -19,12 +19,12 @@ jobs:
       id-token: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           ref: main
 
       - name: Setup Go environment
-        uses: actions/setup-go@v5.1.0
+        uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
         with:
           cache: false
       
@@ -33,7 +33,7 @@ jobs:
         run: |
           curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
         
-      - uses: chainguard-dev/setup-chainctl@v0.2.4
+      - uses: chainguard-dev/setup-chainctl@8d93dcbef466d3cf3533f67084f52eb74ef9d262 # v0.2.4
         with:
           identity: "4cf15780a13a9b6576d8b357e6524554c8c12a18/a662f56b58103354"
         
@@ -50,14 +50,14 @@ jobs:
           
       - name: Upload Grype SARIF results
         if: ${{ env.SCAN_WITH_GRYPE == 'true' }}
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@6bb031afdd8eb862ea3fc1848194185e076637e5 # v3.28.11
         with:
           sarif_file: grype-results.sarif
 
       - name: Prisma Cloud image scan
         if: ${{ env.SCAN_WITH_PRISMA_CLOUD == 'true' }}
         id: prismascan
-        uses: PaloAltoNetworks/prisma-cloud-scan@v1.6.7
+        uses: PaloAltoNetworks/prisma-cloud-scan@124b48d8325c23f58a35da0f1b4d9a6b54301d05 # v1.6.7
         with:
           pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
           pcc_user: ${{ secrets.PCC_USER }}
@@ -66,6 +66,6 @@ jobs:
       
       - name: Upload Prisma Cloud SARIF file
         if: ${{ env.SCAN_WITH_PRISMA_CLOUD == 'true' }}
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@6bb031afdd8eb862ea3fc1848194185e076637e5 # v3.28.11
         with:
           sarif_file: ${{ steps.prismascan.outputs.sarif_file }}
