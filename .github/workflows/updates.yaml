@@ -88,9 +88,13 @@ jobs:
           OLD_IMAGE="${{ env.REDIS_IMAGE }}:${{ env.CURRENT_UNIQUE_TAG }}"
           NEW_IMAGE="${{ env.REDIS_IMAGE }}:${{ env.LATEST_UNIQUE_TAG }}"
           
+          # Images will be signed by either the CATALOG_SYNCER or APKO_BUILDER identity in your organization.
+          # To find these values for your organization, you can view the "Assumed Identities" page in your organization settings.
+          CATALOG_SYNCER="4cf15780a13a9b6576d8b357e6524554c8c12a18/c03040118377d88c"
+          APKO_BUILDER="4cf15780a13a9b6576d8b357e6524554c8c12a18/ca93125e202f81f8"
           cosign verify \
-            --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
-            --certificate-identity=https://github.com/chainguard-images/images-private/.github/workflows/release.yaml@refs/heads/main \
+            --certificate-oidc-issuer=https://issuer.enforce.dev \
+            --certificate-identity-regexp="https://issuer.enforce.dev/(${CATALOG_SYNCER}|${APKO_BUILDER})" \
           $NEW_IMAGE | jq
           
           echo "OLD_IMAGE=$OLD_IMAGE" >> $GITHUB_ENV
